@@ -4,40 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prospecção Direct Instagram - Supabase</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- SDK oficial do Supabase via CDN -->
+  
+  <!-- Tailwind CSS compilado (elimina o aviso do console em produção) -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  
+  <!-- SDK oficial do Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8">
+<body class="bg-gray-900 text-gray-100 min-h-screen p-4 md:p-8">
 
   <div class="max-w-4xl mx-auto space-y-8">
     
     <!-- Cabeçalho -->
     <header class="text-center space-y-2">
       <h1 class="text-3xl font-bold text-indigo-400">Prospecção no Instagram</h1>
-      <p class="text-slate-400">Gerenciador de Leads integrado ao Supabase</p>
+      <p class="text-gray-400">Gerenciador de Leads integrado ao Supabase</p>
     </header>
 
-    <!-- Configuração da Mensagem Padrão -->
-    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-3">
-      <h2 class="text-lg font-semibold text-slate-200">1. Mensagem de Abordagem Padrão</h2>
-      <textarea id="mensagemPadrao" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Digite a mensagem de abordagem..."></textarea>
-      <p class="text-xs text-slate-400">* A página copia automaticamente a mensagem antes de abrir o perfil para você colar (<kbd class="bg-slate-700 px-1 rounded">Ctrl + V</kbd>).</p>
+    <!-- Mensagem Fixa de Abordagem -->
+    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg space-y-2">
+      <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Mensagem Fixa de Abordagem</h2>
+      <div class="bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm text-gray-200">
+        <p id="mensagemTexto">Olá! Vi seu perfil e achei seu conteúdo incrível. Gostaria de apresentar uma oportunidade rápida de parceria, como podemos conversar?</p>
+      </div>
+      <p class="text-xs text-gray-400">* Ao clicar em "Enviar Direct", esta mensagem é copiada automaticamente para você colar (<kbd class="bg-gray-700 px-1 rounded">Ctrl + V</kbd>) no chat do Instagram.</p>
     </div>
 
     <!-- Formulário de Cadastro -->
-    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
-      <h2 class="text-lg font-semibold text-slate-200">2. Cadastrar Novo Lead</h2>
+    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg space-y-4">
+      <h2 class="text-lg font-semibold text-gray-200">Cadastrar Novo Lead</h2>
       
       <form id="leadForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Nome / Perfil</label>
-          <input type="text" id="nome" required placeholder="Ex: João da Silva" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm outline-none focus:border-indigo-500">
+          <label class="block text-xs text-gray-400 mb-1">Nome / Perfil</label>
+          <input type="text" id="nome" required placeholder="Ex: João da Silva" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-sm outline-none focus:border-indigo-500 text-white">
         </div>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">@ do Instagram ou Link</label>
-          <input type="text" id="instagramInput" required placeholder="Ex: @usuario ou instagram.com/usuario" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm outline-none focus:border-indigo-500">
+          <label class="block text-xs text-gray-400 mb-1">@ do Instagram ou Link</label>
+          <input type="text" id="instagramInput" required placeholder="Ex: @usuario ou instagram.com/usuario" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-sm outline-none focus:border-indigo-500 text-white">
         </div>
 
         <button type="submit" id="btnSalvar" class="md:col-span-2 bg-indigo-600 hover:bg-indigo-500 font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2">
@@ -47,23 +52,23 @@
     </div>
 
     <!-- Lista de Leads -->
-    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
+    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg space-y-4">
       <div class="flex justify-between items-center">
-        <h2 class="text-lg font-semibold text-slate-200">3. Lista de Prospectados</h2>
-        <span id="totalLeads" class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">Carregando...</span>
+        <h2 class="text-lg font-semibold text-gray-200">Lista de Prospectados</h2>
+        <span id="totalLeads" class="text-xs bg-gray-700 px-2.5 py-1 rounded-full text-gray-300">Carregando...</span>
       </div>
 
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="border-b border-slate-700 text-xs text-slate-400 uppercase">
+            <tr class="border-b border-gray-700 text-xs text-gray-400 uppercase">
               <th class="py-3 px-2">Nome</th>
               <th class="py-3 px-2">Instagram</th>
               <th class="py-3 px-2 text-right">Ação</th>
             </tr>
           </thead>
-          <tbody id="tabelaLeads" class="divide-y divide-slate-700/50 text-sm">
-            <!-- Dados do Supabase serão renderizados aqui -->
+          <tbody id="tabelaLeads" class="divide-y divide-gray-700 text-sm">
+            <!-- Renderizado via JavaScript -->
           </tbody>
         </table>
       </div>
@@ -73,19 +78,11 @@
 
   <script>
     // Configurações do Supabase (Substitua pelas suas credenciais)
-    const SUPABASE_URL = 'hhttps://uqqnmmixurjyzgctpici.supabase.co';
+     const SUPABASE_URL = 'hhttps://uqqnmmixurjyzgctpici.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Mzo-Ab52kx0Up_s_9CpM9Q_MA8JbYwl';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const msgPadraoEl = document.getElementById('mensagemPadrao');
-
-    // Carrega mensagem padrão do LocalStorage (preferência local rápida)
-    msgPadraoEl.value = localStorage.getItem('msg_padrao_ig') || "Olá! Notei seu perfil e gostaria de apresentar uma oportunidade...";
-    msgPadraoEl.addEventListener('input', () => {
-      localStorage.setItem('msg_padrao_ig', msgPadraoEl.value);
-    });
-
-    // Função para sanitizar e obter apenas o username
+    // Extrai apenas o nome de usuário limpo
     function extrairUsername(input) {
       let cleaned = input.trim().replace('@', '');
       if (cleaned.includes('instagram.com/')) {
@@ -106,7 +103,7 @@
 
       if (error) {
         console.error('Erro ao buscar leads:', error);
-        tbody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-red-400">Erro ao carregar dados do Supabase. Verifique a API Key.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-red-400">Erro ao carregar dados do Supabase. Verifique suas chaves de API.</td></tr>`;
         return;
       }
 
@@ -114,13 +111,13 @@
       total.innerText = `${leads.length} leads`;
 
       if (leads.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-slate-500">Nenhum lead cadastrado ainda.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-gray-500">Nenhum lead cadastrado ainda.</td></tr>`;
         return;
       }
 
       leads.forEach(lead => {
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-800/50 transition-colors';
+        tr.className = 'hover:bg-gray-800 transition-colors';
         tr.innerHTML = `
           <td class="py-3 px-2 font-medium">${lead.nome}</td>
           <td class="py-3 px-2 text-indigo-400">@${lead.username}</td>
@@ -128,7 +125,7 @@
             <button onclick="abordarDirect('${lead.username}')" class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold shadow">
               Enviar Direct
             </button>
-            <button onclick="removerLead(${lead.id})" class="text-slate-500 hover:text-red-400 text-xs px-2 py-1">
+            <button onclick="removerLead(${lead.id})" class="text-gray-500 hover:text-red-400 text-xs px-2 py-1">
               Excluir
             </button>
           </td>
@@ -137,7 +134,7 @@
       });
     }
 
-    // Cadastrar novo lead no Supabase
+    // Cadastrar novo lead
     document.getElementById('leadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -160,7 +157,7 @@
       carregarLeads();
     });
 
-    // Remover lead no Supabase
+    // Remover lead
     async function removerLead(id) {
       if (!confirm('Deseja realmente remover este lead?')) return;
 
@@ -177,21 +174,13 @@
       carregarLeads();
     }
 
-    // Abrir direct e copiar mensagem
+    // Copia a mensagem e abre a página do perfil/direct
     async function abordarDirect(username) {
-      const texto = msgPadraoEl.value;
+      const texto = document.getElementById('mensagemTexto').innerText;
       
+      // Copia a mensagem para o clipboard
       try {
         await navigator.clipboard.writeText(texto);
       } catch (err) {
-        console.error('Erro ao copiar:', err);
+        console.error('Erro ao copiar texto:', err);
       }
-
-      window.open(`https://www.instagram.com/${username}/`, '_blank');
-    }
-
-    // Inicializa a listagem
-    carregarLeads();
-  </script>
-</body>
-</html>
