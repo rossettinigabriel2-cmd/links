@@ -77,8 +77,8 @@
   </div>
 
   <script>
-    // Configurações do Supabase (Substitua pelas suas credenciais)
-     const SUPABASE_URL = 'https://uqqnmmixurjyzgctpici.supabase.co';
+    // Configurações do Supabase
+    const SUPABASE_URL = 'https://uqqnmmixurjyzgctpici.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxcW5tbWl4dXJqeXpnY3RwaWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTgxMzgsImV4cCI6MjEwNzczNDEzOH0.-k2N8DyKyHcTr86amrkdaopFL2wjfKAYVnqxzYKwayw';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -178,9 +178,17 @@
     async function abordarDirect(username) {
       const texto = document.getElementById('mensagemTexto').innerText;
       
-      // Copia a mensagem para o clipboard
       try {
         await navigator.clipboard.writeText(texto);
       } catch (err) {
         console.error('Erro ao copiar texto:', err);
       }
+
+      window.open(`https://www.instagram.com/${username}/`, '_blank');
+    }
+
+    // Inicializa a listagem
+    carregarLeads();
+  </script>
+</body>
+</html>
